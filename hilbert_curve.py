@@ -62,24 +62,6 @@ def hl(sm):
     d = dd[::-1]
     return aa + b + c + d
 
-
-
-def it(pts):
-    sml = []
-#    print(pts)
-    for i in range(len(pts)):
-#        print(i, pts[i])
-        x = pts[i][0]*0.50
-        y = pts[i][1]*0.50
-        tpl = (x, y)
-#        print(tpl)
-        sml.append(tpl)
-#    print(sml)
-    gotru(sml)
-    newset = hl(sml)
-    return newset
-
-    
     
 def it_sim(pts):
     sml = []
