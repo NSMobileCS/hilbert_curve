@@ -1,16 +1,19 @@
 import turtle
 
 
+
 url = "http://en.wikipedia.org/wiki/Hilbert_curve"
 pro_url="http://www.soc.napier.ac.uk/~andrew/hilbert.html"
 
 
-def gothru(pts):
-    """
-    takes the pen/turtle on its drawing journey from point to point.
-    blue ink version.
-    """
+
+
+
+
+def gothru(pts, spd=10):
+    """simple function to draw blue line thru given set of points"""
     t = turtle.Turtle()
+    t.speed(spd)
     t.penup()
     t.goto(pts[0])
     t.pendown()
@@ -19,12 +22,10 @@ def gothru(pts):
     for i in pts[1:]:
         t.goto(i)
 
-def gotru(ps):
-    """
-    takes the pen/turtle on its drawing journey from point to point.
-    orange ink version.
-    """
+def gotru(ps, spd=10):
+    """same as gothru but w/ orange line"""
     u = turtle.Turtle()
+    u.speed(spd)
     u.penup()
     u.goto(ps[0])
     u.pendown()
@@ -35,6 +36,12 @@ def gotru(ps):
     
 
 def hl(sm):
+    """
+    takes sm - the set of points comprising the hilbert curve from the last iteration at 25% overall size.
+    returns the set of points for the current iteration.
+    basically, it places the previous (smaller) figure formed by sm into view 4 times, centered on
+    each quadrant & rotated/reflected appropriately
+    """
     a = []
     b = []
     c = []
@@ -42,13 +49,10 @@ def hl(sm):
     for i in sm:
         pta = (-1.0*i[1] - 100.0, i[0] - 100.0)
         a.append(pta)     #a in reverse order
-    for i in sm:
         ptb = (i[0]-100.0, i[1]+100.0)
         b.append(ptb)
-    for i in sm:
         ptc = (i[0]+100.0, i[1]+100.0)
         c.append(ptc)
-    for i in sm:
         ptd = (i[1], -1.0*i[0])
         ptd = (ptd[0]+100.0, ptd[1]-100.0)
         d.append(ptd)
@@ -62,8 +66,39 @@ def hl(sm):
     d = dd[::-1]
     return aa + b + c + d
 
+
+
+def it(pts, spd=8):
+    """
+    takes a set of points
+    performs the work of calculating the next iteration's vertices
+    returns the new set of points
+
+    also calls gotru function, drawing iteration in orange
+    """
+    sml = []
+#    print(pts)
+    for i in range(len(pts)):
+#        print(i, pts[i])
+        x = pts[i][0]*0.50
+        y = pts[i][1]*0.50
+        tpl = (x, y)
+#        print(tpl)
+        sml.append(tpl)
+#    print(sml)
+    gotru(sml, spd)
+    newset = hl(sml)
+    return newset
+
     
+    
+    
+
 def it_sim(pts):
+    """
+    simpler version of it (iteration step) function;
+    no drawing side-effect
+    """
     sml = []
     for i in range(len(pts)):
         x = pts[i][0]*0.50
@@ -79,15 +114,24 @@ def h(n):
     draws iteration n
     and also draws extra orange lines along the way (prev iterations)
     """
+
     t=turtle.Turtle()
     pts = [(-100.0, -100.0), (-100.0, 100.0), (100.0, 100.0), (100.0, -100.0)]
     if n == 0:    
-        gothru(pts)
+        gothru(pts, spd=3)
         return
     else:
         while n > 0:
-             pts = it(pts)
-             n -= 1
+            if n > 5:
+                spd = 0
+            elif 3 < n < 6:
+                spd = 10
+            elif n == 3:
+                spd = 6
+            elif n == 2:
+                spd = 5
+            pts = it(pts, spd)
+            n -= 1
         gothru(pts)
         return
 
